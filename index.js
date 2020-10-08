@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+app.use(express.json())
 
 
 {
@@ -10,7 +11,7 @@ const app = express()
             "id": 1
         },
         {
-            "name": "Ada Lovelace",
+            "name": "Adi Lovelace",
             "number": "39-44-5323523",
             "id": 2
         },
@@ -28,6 +29,11 @@ const app = express()
 
     app.get('/api/persons', (req, res) => {
         res.json(persons)
+    })
+    app.get('/info', (req, res) => {
+        const info = `There is information of ${persons.length} people in the phonebook.`
+        const time = Date()
+        res.send(`<p>${info}</p><p>${time}</p>`)
     })
 
 
