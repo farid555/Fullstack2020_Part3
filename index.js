@@ -56,20 +56,31 @@ app.delete('/api/persons/:id', (req, res) => {
 
 
 
-const generateId = () => {
+/*const generateId = () => {
     const maxId = persons.length > 0
         ? Math.max(...persons.map(n => n.id))
         : 0
     return maxId + 1
-}
+}*/
 
 app.post('/api/persons', (req, res) => {
     const body = req.body
 
+    if (!body.name || !body.number) {
+        return res.status(400).json({
+            error: 'content is missing'
+        })
+    }
+    if (!persons.every(p => p.name !== body.name)) {
+        return res.status(400).json({
+            error: 'name must be unique'
+        })
+    }
+
 
 
     const person = {
-        id: generateId(),
+        id: Math.floor(Math.random() * 25),
         name: body.name,
         number: body.number,
     }
