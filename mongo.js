@@ -10,8 +10,8 @@ const name = process.argv[3]
 const number = process.argv[4]
 
 const url =
-    `mongodb+srv://farid555:${password}@cluster0.weiyl.mongodb.net/farid555?retryWrites=true&w=majority`
-
+    `mongodb+srv://persons:${password}@cluster0.ovpap.mongodb.net/persons?retryWrites=true&w=majority`
+// `mongodb+srv://farid555:${password}@cluster0.weiyl.mongodb.net/farid555?retryWrites=true&w=majority`
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
 
 const personSchema = new mongoose.Schema({
