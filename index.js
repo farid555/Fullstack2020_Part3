@@ -49,10 +49,12 @@ let persons = [
     }
 ]
 app.get('/info', (req, res) => {
+
     const info = `There is information of ${persons.length} people in the phonebook.`
     const date = Date()
     res.send(`<p>${info}</p><p>${date}</p>`)
 })
+
 
 app.get('/api/persons', (req, res) => {
 
@@ -89,7 +91,20 @@ app.delete('/api/persons/:id', (req, res, next) => {
 
         .catch(error => next(error))
 })
+app.put('/api/persons/:id', (req, res, next) => {
+    const body = req.body
 
+    const person = {
+        name: body.name,
+        number: body.number,
+    }
+
+    Person.findByIdAndUpdate(req.params.id, person, { new: true })
+        .then(updatedPerson => {
+            res.json(updatedPerson)
+        })
+        .catch(error => next(error))
+})
 
 
 
@@ -107,12 +122,12 @@ app.post('/api/persons', (req, res) => {
 
     if (body.name === undefined) {
         return res.status(400).json({
-            error: 'content is missing'
+            error: 'name is missing!'
         })
     }
     if (body.number === undefined) {
         return res.status(400).json({
-            error: 'content is missing!'
+            error: 'number is missing!'
         })
     }
     /*if (!persons.every(p => p.name !== body.name)) {
@@ -120,6 +135,7 @@ app.post('/api/persons', (req, res) => {
             error: 'name must be unique'
         })
     }*/
+
 
     const person = new Person({
         id: Math.floor(Math.random() * 25),
@@ -138,6 +154,7 @@ const errorHandler = (error, req, res, next) => {
     next(error)
 }
 app.use(errorHandler)
+
 
 
 
