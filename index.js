@@ -65,9 +65,7 @@ app.get('/api/persons', (req, res) => {
 })
 
 
-/*app.get('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    const person = persons.find(p => p.id === id)*/
+
 
 app.get('/api/persons/:id', (req, res, next) => {
     Person.findById(req.params.id)
@@ -110,14 +108,9 @@ app.put('/api/persons/:id', (req, res, next) => {
 
 
 
-/*const generateId = () => {
-    const maxId = persons.length > 0
-        ? Math.max(...persons.map(n => n.id))
-        : 0
-    return maxId + 1
-}*/
 
-app.post('/api/persons', (req, res) => {
+
+app.post('/api/persons', (req, res, next) => {
     const body = req.body
 
     if (body.name === undefined) {
@@ -130,12 +123,6 @@ app.post('/api/persons', (req, res) => {
             error: 'number is missing!'
         })
     }
-    /*if (!persons.every(p => p.name !== body.name)) {
-        return res.status(400).json({
-            error: 'name must be unique'
-        })
-    }*/
-
 
     const person = new Person({
         id: Math.floor(Math.random() * 25),
@@ -143,13 +130,17 @@ app.post('/api/persons', (req, res) => {
         number: body.number,
     })
     person.save().then(savedPerson => {
-        res.json(savedPerson)
+        res.json(savedPerson.toJSON)
     })
+        .catch(error => next(error))
 })
 const errorHandler = (error, req, res, next) => {
     console.error(error.message)
     if (error.name === 'CastError') {
         return res.status(400).send({ error: 'malformed id' })
+    }
+    else if (error.name === 'ValidationError') {
+        return res.status(400).json({ error: error.message })
     }
     next(error)
 }
