@@ -1,14 +1,16 @@
 const express = require('express')
-const morgan = require('morgan')
-
-const cors = require('cors')
 const app = express()
+const morgan = require('morgan')
+const cors = require('cors')
+const Person = require('./models/persons')
+
 
 app.use(express.json())
+app.use(cors())
 app.use(express.static('build'))
 
 
-morgan.token('body', (req, res) => {
+morgan.token('data', (req, res) => {
 
     if (req.method === 'POST') {
         return JSON.stringify(req.body)
@@ -16,11 +18,11 @@ morgan.token('body', (req, res) => {
         return null
     }
 })
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
 
 
 
-app.use(cors())
+
 
 
 let persons = [
@@ -46,14 +48,24 @@ let persons = [
     }
 ]
 
-app.get('/api/persons', (req, res) => {
+
+app.get('/api/persons/', (req, res) => {
     res.json(persons)
+    Person.find({}).then(person, res => {
+        res.json(persons.map(person => person.toJSON()))
+    })
+
 })
 app.get('/info', (req, res) => {
     const info = `There is information of ${persons.length} people in the phonebook.`
-    const time = Date()
-    res.send(`<p>${info}</p><p>${time}</p>`)
+    const date = Date()
+    res.send(`<p>${info}</p><p>${date}</p>`)
 })
+
+/*app.get('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id)
+    const person = persons.find(p => p.id === id)*/
+
 app.get('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)
     const person = persons.find(p => p.id === id)
@@ -64,11 +76,13 @@ app.get('/api/persons/:id', (req, res) => {
         res.status(404).end()
     }
 })
-app.delete('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    persons = persons.filter(p => p.id !== id)
 
+
+app.delete('/api/persons/:id', (req, res) => {
+    const id = Number(req, params.id)
+    persons = persons.filter(person => person.id !== id)
     res.status(204).end()
+
 })
 
 
@@ -95,18 +109,17 @@ app.post('/api/persons', (req, res) => {
         })
     }
 
-
-
     const person = {
         id: Math.floor(Math.random() * 25),
         name: body.name,
         number: body.number,
     }
-
     persons = persons.concat(person)
-
     res.json(person)
 })
+
+
+
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
