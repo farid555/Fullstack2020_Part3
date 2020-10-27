@@ -49,12 +49,12 @@ let persons = [
     }
 ]
 app.get('/info', (req, res) => {
-
-    const info = `There is information of ${persons.length} people in the phonebook.`
-    const date = Date()
-    res.send(`<p>${info}</p><p>${date}</p>`)
+    Person.find({}).then(people => {
+        const info = `There is information of ${people.length} people in the phonebook.`
+        const date = Date()
+        res.send(`<p>${info}</p><p>${date}</p>`)
+    })
 })
-
 
 app.get('/api/persons', (req, res) => {
 
@@ -155,6 +155,11 @@ const errorHandler = (error, req, res, next) => {
 }
 app.use(errorHandler)
 
+const unknownEndpoint = (req, res) => {
+    res.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
 
 
 
