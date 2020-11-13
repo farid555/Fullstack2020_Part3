@@ -24,8 +24,8 @@ app.use(
 app.get('/info', (req, res) => {
   Person.find({}).then((people) => {
     const info = `There is information of ${people.length} people in the phonebook.`
-    const date = Date()
-    res.send(`<p>${info}</p><p>${date}</p>`)
+    const time = Date()
+    res.send(`<p>${info}</p><p>${time}</p>`)
   })
 })
 
@@ -92,7 +92,7 @@ app.post('/api/persons', (req, res, next) => {
   person
     .save()
     .then((savedPerson) => {
-      res.json(savedPerson.toJSON)
+      res.json(savedPerson)
     })
     .catch((error) => next(error))
 })
