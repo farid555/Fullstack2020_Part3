@@ -34,6 +34,7 @@
     "mongoose-unique-validator": "^2.0.3",
     "morgan": "^1.10.0"
   },
+  
   "devDependencies": {
     "eslint": "^7.13.0",
     "eslint-plugin-linting-lightning": "0.0.7",
