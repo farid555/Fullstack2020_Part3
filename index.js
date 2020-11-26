@@ -10,7 +10,7 @@ app.use(express.static('build'))
 app.use(cors())
 
 
-morgan.token('data', (req) => {
+morgan.token('body', (req) => {
   if (req.method === 'POST') {
     return JSON.stringify(req.body)
   } else {
@@ -18,7 +18,7 @@ morgan.token('data', (req) => {
   }
 })
 app.use(
-  morgan(':method :url :status :res[content-length] - :response-time ms :data')
+  morgan(':method :url :status :res[content-length] - :response-time ms :body')
 )
 
 app.get('/info', (req, res) => {
@@ -89,11 +89,9 @@ app.post('/api/persons', (req, res, next) => {
     name: body.name,
     number: body.number,
   })
-  person
-    .save()
-    .then((savedPerson) => {
-      res.json(savedPerson)
-    })
+  person.save().then((savedPerson) => {
+    res.json(savedPerson.toJSON)
+  })
     .catch((error) => next(error))
 })
 const errorHandler = (error, req, res, next) => {
