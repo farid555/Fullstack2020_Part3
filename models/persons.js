@@ -14,9 +14,14 @@ const personSchema = new mongoose.Schema({
   name: {
     type: String,
     unique: true,
+    minlength: 3,
+    require: 3,
   },
-  number: String,
-
+  number: {
+    type: String,
+    minlength: 8,
+    required: true,
+  },
 })
 personSchema.plugin(uniqueValidator)
 personSchema.set('toJSON', {
