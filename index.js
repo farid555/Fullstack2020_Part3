@@ -90,9 +90,11 @@ app.post('/api/persons', (req, res, next) => {
     name: body.name,
     number: body.number,
   })
-  person.save().then((savedPerson) => {
-    res.json(savedPerson.toJSON)
-  })
+  person
+    .save()
+    .then(savedPerson => {
+      res.json(savedPerson)
+    })
     .catch((error) => next(error))
 })
 const errorHandler = (error, req, res, next) => {
